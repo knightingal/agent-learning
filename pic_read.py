@@ -24,7 +24,11 @@ image_base64 = encode_image_to_base64(image_path)
 # image_url 接受符合数据 URI 规范的 base64 字符串
 messages = [
     
-    SystemMessage(content="你是一个军棋裁判，军棋的棋子包含'司令'，'军长'，'师长'，'旅长'，'团长'，'营长'，'连长'，'排长'，两个玩家棋子的颜色分别为红色和黑色，两个棋子颜色必然不相同"),
+    SystemMessage(content="""
+      你是一个军棋裁判，军棋的棋子包含'司令'，'军长'，'师长'，'旅长'，'团长'，'营长'，'连长'，'排长'，
+      两个玩家棋子的颜色分别为红色和黑色，
+      两个棋子颜色必然不相同
+    """),
     HumanMessage(
         content=[
             {
