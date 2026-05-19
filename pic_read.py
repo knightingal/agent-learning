@@ -11,6 +11,7 @@ def encode_image_to_base64(image_path):
 # 确保你本地 Ollama 已经 pull 了对应的模型
 llm = ChatOllama(
     model="qwen2.5vl:7b",
+    # model="gemma4:26b",
     temperature=0
 )
 
