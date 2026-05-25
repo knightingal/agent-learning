@@ -27,31 +27,6 @@ class MilitaryHTTPRequestHandler(SimpleHTTPRequestHandler):
     image_base64 = base64.b64encode(body).decode("utf-8")
     response_json = military_read(image_base64=image_base64)
 
-    # time = datetime.datetime.now()
-    # now = time.strftime("%d-%m-%Y-%H:%M:%S")
-
-    # pic_file = open(now + ".jpg", "wb+")
-    # pic_file.write(body)
-    # pic_file.close()
-
-    # img = Image.open(now + ".jpg").convert("RGB")
-    # img.save(now + "jp.jpg")
-
-
-    # ocr = PaddleOCR(use_angle_cls=True, lang='ch')
-
-    resp_obj = []
-
-    # result = ocr.ocr(body, cls=True)
-    # if result is not None:
-    #   for idx in range(len(result)):
-    #       res = result[idx]
-    #       if res is not None:
-    #         for line in res:
-    #             print(line)
-    #             resp_obj.append({"text":line[1][0], "trust_rate":line[1][1]})
-
-    # resp_body = json.dumps(resp_obj, ensure_ascii=False)
     print(response_json)
     resp_bytes = bytes(response_json, "UTF-8")
 
