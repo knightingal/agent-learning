@@ -10,10 +10,12 @@ def encode_image_to_base64(image_path):
 
 def init_llm():
   global llm 
+  # 创建一个JSON输出解析器
   llm = ChatOllama(
       model="qwen2.5vl:7b",
       # model="gemma4:26b",
-      temperature=0
+      temperature=0,
+      format="json"
   )
 
 # 2. 初始化本地的多模态大模型
@@ -21,7 +23,7 @@ def init_llm():
 init_llm()
 
 # 3. 准备你的本地图片路径
-image_path = "./test_pic3.jpeg"
+image_path = "./test_pic1.jpeg"
 
 # image_path = "./011919.jpg"
 image_base64 = encode_image_to_base64(image_path)
@@ -41,7 +43,7 @@ def military_read(image_base64):
         首先判断图片中有没有两个上述棋子，如果没有或少于两个棋子，返回空json数组。如果多于两个棋子，返回空json数组
         两个玩家棋子的颜色分别为红色和黑色，
         两个棋子颜色必然不相同，
-        只需要返回棋子的上的字以及字的颜色，用json格式返回，字段名为'text'，'color'
+        只需要返回棋子的上的字以及字的颜色，用json array格式返回，item字段名为'text'，'color'
       """),
       HumanMessage(
           content=[
