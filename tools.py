@@ -43,7 +43,7 @@ def local_search(query: str, top_k: int = 3) -> list[dict]:
         raise FileNotFoundError(f"Knowledge directory not found: {KNOWLEDGE_DIR}")
 
     results = []
-    for file_path in sorted(KNOWLEDGE_DIR.glob("*.md")):
+    for file_path in sorted(KNOWLEDGE_DIR.glob("*.txt")):
         content = file_path.read_text(encoding="utf-8")
         for index, chunk in enumerate(split_chunks(content)):
             score = score_chunk(query, chunk)
