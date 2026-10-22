@@ -1,5 +1,4 @@
 # Step 1: Define tools and model
-
 from langchain.tools import tool
 from langchain.chat_models import init_chat_model
 from langchain_openai import ChatOpenAI
@@ -8,7 +7,7 @@ from langchain_openai import ChatOpenAI
 model = ChatOpenAI(
   model="Qwen3-Coder-30B-A3B-Instruct-Q3_K_M.gguf",
   api_key="0",  # If you prefer to pass api key in directly
-  base_url="http://192.168.2.212:8080/v1"
+  base_url="http://127.0.0.1:8080/v1"
 )
 
 
@@ -141,9 +140,11 @@ agent_builder.add_edge("tool_node", "llm_call")
 agent = agent_builder.compile()
 
 
-from IPython.display import Image, display
+from IPython.display import Image
 # Show the agent
-display(Image(agent.get_graph(xray=True).draw_mermaid_png()))
+image = Image(agent.get_graph(xray=True).draw_mermaid_png())
+with open("out.png", "wb") as f:
+  f.write(image.data)
 
 # Invoke
 from langchain.messages import HumanMessage
