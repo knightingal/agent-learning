@@ -12,7 +12,11 @@ BASE_DIR = Path(__file__).resolve().parent
 REPORTS_DIR = BASE_DIR / "reports"
 
 def get_model() -> ChatOpenAI:
-  return ChatOpenAI()
+  return ChatOpenAI(
+    model="Qwen3-Coder-30B-A3B-Instruct-Q3_K_M.gguf",
+    api_key="0",  # If you prefer to pass api key in directly
+    base_url="http://192.168.2.212:8080/v1"
+  )
 
 def search_node(state: ResearchState) -> dict:
   results = search_local_docs(state["query"], top_k=8)
