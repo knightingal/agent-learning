@@ -22,7 +22,7 @@ def main() -> None:
     for state_snapshot in graph.stream(initial_state, stream_mode="values"):
       final_state = state_snapshot
       print("\n=== STATE SNAPSHOT ===")
-      print({key: typ(value).__name__ for key, value in state_snapshot.items()})
+      print({key: type(value).__name__ for key, value in state_snapshot.items()})
 
   else:
     final_state = graph.invoke(initial_state)

@@ -39,10 +39,10 @@ def search_local_docs(query: str, top_k: int = 8) -> list[dict]:
     if not KNOWLEDGE_DIR.exists():
         raise FileNotFoundError(f"Knowledge directory not found: {KNOWLEDGE_DIR}")
 
-    results = []
-    for file_path in sorted(KNOWLEDGE_DIR.glob("*.txt")):
+    results: list[dict] = []
+    for file_path in sorted(KNOWLEDGE_DIR.glob("*.md")):
         content = file_path.read_text(encoding="utf-8")
-        for index, chunk in enumerate(split_chunks(content)):
+        for index, chunk in enumerate(split_markdown(content)):
             chunk_score = score(query, chunk)
             if chunk_score > 0:
                 results.append({
