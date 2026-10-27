@@ -7,3 +7,9 @@ class ResearchState(TypedDict, total=False):
   comparison: dict
   report: str
   report_path: str
+
+  active_query: str
+  quality: dict
+  retry_count: int
+  max_retries: int
+  query_history: list[str]

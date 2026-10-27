@@ -15,6 +15,17 @@ class TechnologyFacts(BaseModel):
 class ExtractionResult(BaseModel):
   technologies: list[TechnologyFacts]
 
+class QualityAssessment(BaseModel):
+  passed: bool
+  score: int = Field(ge=0, le=100)
+  missing_dimensions: list[str] = Field(default_factory=list)
+  evidence_gaps: list[str] = Field(default_factory=list)
+  retry_query_hint: str
+
+class QueryRewrite(BaseModel):
+  rewritten_query: str
+  rationale: str
+
 class ComparisonRow(BaseModel):
   dimension: str
   technology_a: str
