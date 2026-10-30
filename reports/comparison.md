@@ -1,29 +1,29 @@
-# Comparison of LongChain and LangGraph for Program
+# Comparison of LongChain and LangGraph for AI Agent Development
 
 ## Comparison
 
-| Dimension | LangGraph | LangChain|
+| Dimension | LongChain | LangGraph|
 |---|---|---|
-| Agent Loop | deterministic steps, LLM-driven agentic steps | model + harness, prompt, tools, middleware |
-| Workflow | long-running, stateful | agent, use case-specific |
-| State Management | short-term working memory, long-term memory | short-term working memory, long-term memory |
-| Multi-Agent | subagents | subagents |
-| Complexity | low-level | high-level |
-| Best Use Case | complex tasks, deterministic steps, agentic steps | highly customizable harness, agent composition, use case-specific |
+| Agent Loop | create_agent | stateful workflows |
+| Workflow | models, tools, prompt, middleware | deterministic steps, LLM-driven agentic steps |
+| State Management | durable execution, human-in-the-loop, persistence | durable execution, streaming, human-in-the-loop, persistence, memory |
+| Multi-Agent | subagent-spawning | subagents, complex state transitions |
+| Complexity | highly configurable | low-level |
+| Best Use Case | use cases requiring a highly customizable harness, application where minimal code changes are preferred | advanced needs combining deterministic and agentic workflows, use cases requiring fine-grained control over agent behavior |
 
 ## Recommendation
 
-LangGraph is better suited for low-level orchestration with fine-grained control over agent workflows, while LangChain offers a higher-level abstraction for building customizable agents that leverage LangGraph's capabilities.
+LongChain is recommended for users seeking a highly configurable and customizable agent harness, particularly when minimal code changes are preferred. LangGraph is recommended for advanced users who need low-level control over agent orchestration and wish to combine deterministic and LLM-driven steps in the same graph.
 
 ### Reasons
 
-- LangGraph's low-level nature allows more precise control over execution flow
-- LangChain's high-level approach simplifies agent creation but abstracts away some details
+- LongChain's highly configurable nature makes it suitable for use cases where a minimal code change approach is desired.
+- LangGraph's low-level design and fine-grained control make it ideal for users who need to mix deterministic and agentic workflows.
 
 ### Caveats
 
-- Evidence gap: The comparison only covers the specified dimensions and does not include performance metrics or scalability comparisons
-- Evidence gap: No information provided about specific implementation details or integration complexity
+- LongChain requires LangGraph components for underlying orchestration, which could be a limitation for users who want to avoid additional dependencies.
+- LangGraph does not abstract prompts or architecture, which may require users to have familiarity with components like models and tools.
 
 ## Sources
 

@@ -16,7 +16,7 @@ def get_model() -> ChatOpenAI:
   return ChatOpenAI(
     model="Qwen3-Coder-30B-A3B-Instruct-Q3_K_M.gguf",
     api_key="0",  # If you prefer to pass api key in directly
-    base_url="http://192.168.2.212:8080/v1"
+    base_url="http://127.0.0.1:8080/v1"
   )
 
 def search_node(state: ResearchState) -> dict:
@@ -61,7 +61,7 @@ def extract_node(state: ResearchState) -> dict:
     "extracted_facts": [item.model_dump() for item in result.technologies]
   }
 
-def query_node(state: ResearchState) -> dict:
+def quality_node(state: ResearchState) -> dict:
   facts = state["extracted_facts"]
 
   if len(facts) < 2:
@@ -90,7 +90,8 @@ def query_node(state: ResearchState) -> dict:
         "State Management, Multi-Agent, Complexity, "
         "and Best Use Case."
         "Use only supplied facts."
-        f"A score of at least {QUALITY_THRESHOLD} is required to pass."
+        # f"A score of at least {QUALITY_THRESHOLD} is required to pass."
+        "Give a score from 0 to 100 to mark the quality."
         "If evidence is insufficient, explain what is missing "
         "and suggest what the next search should target."
       ), 
@@ -104,6 +105,8 @@ def query_node(state: ResearchState) -> dict:
   )
 
   quality = result.model_dump()
+
+  print(quality)
 
   quality["passed"] = (
     quality["passed"] and quality["score"] >= QUALITY_THRESHOLD
@@ -122,11 +125,14 @@ def route_after_quality(state: ResearchState) -> str:
   max_retries = state.get("max_retries", 2)
 
   if retry_count < max_retries:
+    print("go to rewrite")
     return "rewrite"
 
+  print("go to failure")
   return "failure"
 
 def rewrite_query_node(state: ResearchState) -> dict:
+  print("enter rewrite_query_node")
   quality = state["quality"]
 
   previous_query = state.get("active_query", state["query"])
@@ -151,6 +157,7 @@ def rewrite_query_node(state: ResearchState) -> dict:
   )
 
   new_query = result.rewritten_query
+  print("new_query:" + new_query)
   retry_count = state.get("retry_count", 0) + 1
   query_history = [
     *state.get("query_history", []), 
