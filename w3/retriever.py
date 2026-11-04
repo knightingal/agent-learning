@@ -28,7 +28,7 @@ class HybridRetriever:
     self.by_id = {item["chunk_id"]: item for item in self.documents}
     self.bm25 = BM25Okapi([tokenize(item["content"]) for item in self.documents])
     self.matrix = np.asarray([item["embedding"] for item in self.documents], dtype=np.float32)
-    self.matrix /= np.linalg.norm(sefl.matrix, axis=1, keepdims=True).clip(min=1e-12)
+    self.matrix /= np.linalg.norm(self.matrix, axis=1, keepdims=True).clip(min=1e-12)
     self.client = OpenAI()
     self.embedding_model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
 

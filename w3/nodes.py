@@ -22,7 +22,7 @@ def get_retriever() -> HybridRetriever:
 def initialize_node(state: RAGState) -> dict:
   model = get_model().with_structured_output(SearchPlan)
   grade = state.get("grade")
-  prompt = f"Question:\n{state["question"]}"
+  prompt = f"Question:\n{state['question']}"
   if grade:
     prompt += f"\n\nPrevious evidence grade:\n{json.dumps(grade, ensure_ascii=False)}"
   result = model.invoke([

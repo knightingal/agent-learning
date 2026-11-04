@@ -19,7 +19,9 @@ def main():
       "grade": state.get("grade",{}).get("score", 0),
       "citations": state.get("citations",[])
     })
-  out = BASE/"reports"/"evaluation.json"; out.parent.mkdir(exist_ok=True); out.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+  out = BASE/"reports"/"evaluation.json"
+  out.parent.mkdir(exist_ok=True)
+  out.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
   print(json.dumps(results, ensure_ascii=False, indent=2))
 
 if __name__ == "__main__":

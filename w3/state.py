@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-class RAGState(TypedDict, total=Flase):
+class RAGState(TypedDict, total=False):
   question: str
   queries: list[str]
   evidence: list[dict]

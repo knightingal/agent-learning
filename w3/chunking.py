@@ -28,14 +28,14 @@ def load_chunks(knowledge_dir: Path) -> list[dict]:
     for line in text.splitlines()[:20]:
       if line.lower().startswith("source_url:"):
         source_url = line.split(":", 1)[1].strip()
-      for index, content in enumerate(split_markdown(text)):
-        raw_id = f"{path.name}:{index}:{content}"
-        chunk_id = hashlib.sha256(raw_id.encode("utf-8")).hexdigest()[:16]
-        records.append({
-          "chunk_id": chunk_id,
-          "source": path.name,
-          "source_url": source_url,
-          "chunk_index": index,
-          "content": content
-        })
+    for index, content in enumerate(split_markdown(text)):
+      raw_id = f"{path.name}:{index}:{content}"
+      chunk_id = hashlib.sha256(raw_id.encode("utf-8")).hexdigest()[:16]
+      records.append({
+        "chunk_id": chunk_id,
+        "source": path.name,
+        "source_url": source_url,
+        "chunk_index": index,
+        "content": content
+      })
   return records
