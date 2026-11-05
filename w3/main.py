@@ -1,24 +1,27 @@
-from langchain.agents import create_agent
-from langchain_openai import ChatOpenAI
+import argparse
+import os
+from dotenv import load_dotenv
+from w3.graph import build_grade
 
+def main():
+  load_dotenv()
+  parser = argparse.ArgumentParser()
+  parser.add_argument("quesiont", nargs="?", default="What is the difference between a work profile and a fully managed device?")
+  parser.add_argument("--max-retries", type=int, default=2)
+  parser.add_argument("--stream", action="store_true")
+  args = parser.parse_args()
 
-def get_weather(city: str) -> str:
-    """Get weather for a given city."""
-    return f"It's always sunny in {city}!"
+  graph = build_grade()
+  initial = {"question": args.question, "max_retries": args.max_retries}
+  final = initial
+  if args.stream:
+    for final in graph.stream(initial, stream_mode="values", config={"recursion_limit": 30}):
+      print({"queries": final("queries"), "retry_count": final.get("retry_count"), "grade": final.get("grade")})
+  else:
+    final = graph.invoke(initial, config={"recursion_limit": 30})
 
-model = ChatOpenAI(
-  model="Qwen3-Coder-30B-A3B-Instruct-Q3_K_M.gguf",
-  api_key="0",  # If you prefer to pass api key in directly
-  base_url="http://localhost:8080/v1"
-)
+  print("\n" + final["answer"])
+  print("Report" + final["report_path"])
 
-agent = create_agent(
-    model=model,
-    tools=[get_weather],
-    system_prompt="You are a helpful assistant",
-)
-
-result = agent.invoke(
-    {"messages": [{"role": "user", "content": "What's the weather in Nanjing?"}]}
-)
-print(result["messages"][-1].content)
+if __name__ == "__main__":
+  main()

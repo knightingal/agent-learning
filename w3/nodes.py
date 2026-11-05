@@ -20,6 +20,9 @@ def get_retriever() -> HybridRetriever:
   return _retriever
 
 def initialize_node(state: RAGState) -> dict:
+  return {"retry_count": 0, "max_retries": state.get("max_retries", 2)}
+
+def plan_queries_node(state: RAGState) -> dict:
   model = get_model().with_structured_output(SearchPlan)
   grade = state.get("grade")
   prompt = f"Question:\n{state['question']}"
@@ -31,6 +34,8 @@ def initialize_node(state: RAGState) -> dict:
   ])
   queries = list(dict.fromkeys([state["question"], *result.queries]))[:4]
   return {"queries": queries}
+
+
 
 def retrieve_node(state: RAGState) -> dict:
   merged: dict[str, dict] = {}
@@ -57,3 +62,46 @@ def grade_evidence_node(state: RAGState) -> dict:
   grade = result.model_dump()
   grade["sufficient"] = bool(grade["sufficient"] and grade["score"] >= 75)
   return {"grade": grade}
+
+def route_after_grade(state: RAGState) -> str:
+  if state["grade"]["sufficient"]:
+    return "answer"
+  if state.get("retry_count", 0) < state.get("max_retries", 2):
+    return "retry"
+  return "refuse"
+
+def retry_node(state: RAGState) -> dict:
+  return {"retry_count": state.get("retry_count", 0) + 1}
+
+def answer_node(state: RAGState) -> dict:
+  compact = [{"citation_id": x["citation_id"], "source": x["source"], "source_url":x["source_url"], "content": x["content"]} for x in state["evidence"]]
+  model = get_model().with_structured_output(CitedAnswer)
+  result = model.invoke([
+    ("system", "Answer only for supplied evidence. Put citation IDs such as [S1] immediately after the supported claims. Never cite an ID not present in evidence. If evidence conflicts, state the conflict."),
+    ("human", f"Question:\n{state['question']}\n\nEvidence:\n{json.dumps(compact, ensure_ascii=False)}")
+  ])
+  valid_ids = {item["citation_id"] for item in state["evidence"]}
+  citations = [item for item in result.citations if item in valid_ids]
+  return {"answer": result.answer, "citations":citations}
+
+def refuse_node(state: RAGState) -> dict:
+  missing = "; ".join(state['grade'].get("missing_information", []))
+  return {"answer": f"I cannot answer from the indexed knowledge base with sufficent evidence. Missing information: {missing}", "citations": []}
+
+def report_node(state: RAGState) -> dict:
+  REPORTS_DIR.mkdir(exist_ok=True)
+  lines = ["# Android Enterprise Expert Agent", "", "## Question", "", state["question"], "", "## Answer", "", state["answer"], "", "## Evidence" ,""]
+  used = set(state.get("citations", []))
+  for item in state.get("evidence", []):
+    if used and item["citation_id"] not in used:
+      continue
+    source = item["source_url"] or item["source"]
+    lines.extend([f"### [{item['citations_id']}] {item["source"]}", "", f"Source: {source}", "", item["content"], ""])
+  lines.extend(["## Retrieval diagnostics", "", 
+    f"- Queries: {state.get('queries', [])}", 
+    f"- Retry count: {state.get('retry_count', 0)}", 
+    f"- Evidence score: {state.get("grade", {}).get("score", 0)}", ""])
+  report = "\n".join(lines)
+  path = REPORTS_DIR/"answer.md"
+  path.write_text(report, encoding="utf-8")
+  return {"report_path": str(path)}
