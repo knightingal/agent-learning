@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from graph import build_graph
 
+### Sample command: python w2d3main.py "Compare LongChain and LangGraph for program" --stream
 def main() -> None:
   load_dotenv()
   parser = argparse.ArgumentParser(description="Search -> Extract -> Compare -> Report")
