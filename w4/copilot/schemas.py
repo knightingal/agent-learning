@@ -21,7 +21,7 @@ class ResearchFinding(BaseModel):
 class ResearchResult(BaseModel):
   summary: str
   findings: list[ResearchFinding] = Field(default_factory=list)
-  constraints = list[str] = Field(default_factory=list)
+  constraints: list[str] = Field(default_factory=list)
   evidence_sufficient: bool
 
 class FileChange(BaseModel):

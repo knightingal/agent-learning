@@ -17,8 +17,11 @@ SAFE_COMMANDS = {"python", "python3", "pytest", "gradle", "./gradlew"}
 
 
 def _run(agent, prompt: str):
+  print("_run prompt:" + prompt)
   result = Runner.run_sync(agent, prompt, max_turns=8)
-  return result.final_output
+  output = result.final_output
+  print(output)
+  return output
 
 
 def initialize_node(state: CopilotState) -> dict:
@@ -27,6 +30,8 @@ def initialize_node(state: CopilotState) -> dict:
 
 
 def plan_node(state: CopilotState) -> dict:
+  print("enter plan_node")
+
   output = _run(PLANNER, f"User request:\n{state['request']}")
   plan = output.model_dump()
   HARNESS.trace("plan_created", plan)

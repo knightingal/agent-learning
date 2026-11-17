@@ -4,10 +4,7 @@ from openai import AsyncOpenAI
 from agents import OpenAIChatCompletionsModel
 
 def create_model():
-  provider = os.getenv(
-    "MODEL_PROVIDER", "openai"
-  )
-
+  provider = "deepseek"
   if provider == "deepseek":
     client = AsyncOpenAI(
       base_url="https://api.deepseek.com",
@@ -15,7 +12,7 @@ def create_model():
     )
 
     return OpenAIChatCompletionsModel(
-      model=os.getenv("MODEL_NAME", "deepseek-flash"),
+      model="deepseek-v4-pro",
       openai_client=client
     )
 

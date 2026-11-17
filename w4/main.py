@@ -15,13 +15,13 @@ def main() -> None:
   parser.add_argument(
     "request",
     nargs="?",
-    defautl="Create a small Kotlin utiliy that validates an Android Enterprise enrollment token format and add tests."
+    default="Create a small Kotlin utiliy that validates an Android Enterprise enrollment token format and add tests."
   )
   parser.add_argument("--max-iterations", type=int, default=1)
   args = parser.parse_args()
 
-  if not os.getenv("OPENAN_API_KEY"):
-    raise RuntimeError("OPENAI_API_KEY is not set")
+  # if not os.getenv("OPENAN_API_KEY"):
+  #   raise RuntimeError("OPENAI_API_KEY is not set")
   
   graph = build_graph()
   thread_id = str(uuid.uuid4())
