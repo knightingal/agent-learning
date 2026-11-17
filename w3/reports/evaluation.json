@@ -1,0 +1,28 @@
+[
+  {
+    "question": "What is the difference between a work profile and a fully managed device?",
+    "term_recall": 1.0,
+    "grade": 85,
+    "citations": [
+      "S1"
+    ]
+  },
+  {
+    "question": "What is an enrollment token used for?",
+    "term_recall": 1.0,
+    "grade": 85,
+    "citations": [
+      "S1"
+    ]
+  },
+  {
+    "question": "How are managed applications controlled",
+    "term_recall": 0.6666666666666666,
+    "grade": 85,
+    "citations": [
+      "S1",
+      "S2",
+      "S3"
+    ]
+  }
+]

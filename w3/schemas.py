@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 class SearchPlan(BaseModel):
-  queries: list[str] = Field(min_length=1, max_digits=4)
+  queries: list[str]
   rationale: str
 
 class EvidenceGrade(BaseModel):
@@ -12,5 +12,5 @@ class EvidenceGrade(BaseModel):
 
 class CitedAnswer(BaseModel):
   answer: str
-  citation: list[str] = Field(default_factory=list)
+  citations: list[str] = Field(default_factory=list)
   limitations: list[str] = Field(default_factory=list)

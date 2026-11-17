@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
-from w3.chunking import load_chunks
+from chunking import load_chunks
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -18,11 +18,14 @@ def build_index() -> None:
   load_dotenv()
   chunks = load_chunks(KNOWLEDGE_DIR)
 
-  client = OpenAI()
+  client = OpenAI(
+    base_url="http://127.0.0.1:8080/v1",
+    api_key="0"
+  )
   embeddings: list[list[float]] = []
   contents = [item["content"] for item in chunks]
   for group in batch(contents):
-    response = client.embeddings.create(model="text-embedding-3-small", input=group)
+    response = client.embeddings.create(model="nomic-embed-text-v1.5.f16.gguf", input=group)
     embeddings.extend(item.embedding for item in response.data)
   
   for item, vector in zip(chunks, embeddings):

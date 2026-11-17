@@ -1,12 +1,12 @@
 import json
 from pathlib import Path
-from graph import build_graph
+from graph import build_grade
 
 BASE = Path(__file__).resolve().parent
 
 def main():
   cases = [json.loads(line) for line in (BASE / "eval" / "questions.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
-  graph = build_graph()
+  graph = build_grade()
   results = []
   for case in cases:
     state = graph.invoke({"question": case['question'], "max_retries": 1}, config={"recursion_limit": 20})

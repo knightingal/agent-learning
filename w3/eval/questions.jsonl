@@ -1,0 +1,3 @@
+{"question": "What is the difference between a work profile and a fully managed device?", "expected_terms":["work profile", "personal", "entire device"]}
+{"question": "What is an enrollment token used for?", "expected_terms":["enrollment token", "provisioning", "enterprise"]}
+{"question": "How are managed applications controlled", "expected_terms":["application policy", "installed", "blocked"]}

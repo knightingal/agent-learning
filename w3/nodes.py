@@ -3,15 +3,19 @@ import os
 from pathlib import Path
 from langchain_openai import ChatOpenAI
 from retriever import HybridRetriever
-from w3.schemas import CitedAnswer, EvidenceGrade, SearchPlan
-from w3.state import RAGState
+from schemas import CitedAnswer, EvidenceGrade, SearchPlan
+from state import RAGState
 
 BASE_DIR = Path(__file__).resolve().parent
 REPORTS_DIR = BASE_DIR / "reports"
 _retriever: HybridRetriever | None = None
 
 def get_model() -> ChatOpenAI:
-  return ChatOpenAI()
+  return ChatOpenAI(
+    model="Qwen3-Coder-30B-A3B-Instruct-Q3_K_M.gguf",
+    api_key="0",  # If you prefer to pass api key in directly
+    base_url="http://127.0.0.1:8080/v1"
+  )
 
 def get_retriever() -> HybridRetriever:
   global _retriever
@@ -96,7 +100,7 @@ def report_node(state: RAGState) -> dict:
     if used and item["citation_id"] not in used:
       continue
     source = item["source_url"] or item["source"]
-    lines.extend([f"### [{item['citations_id']}] {item["source"]}", "", f"Source: {source}", "", item["content"], ""])
+    lines.extend([f"### [{item['citation_id']}] {item["source"]}", "", f"Source: {source}", "", item["content"], ""])
   lines.extend(["## Retrieval diagnostics", "", 
     f"- Queries: {state.get('queries', [])}", 
     f"- Retry count: {state.get('retry_count', 0)}", 

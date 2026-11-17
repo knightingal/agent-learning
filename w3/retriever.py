@@ -29,8 +29,11 @@ class HybridRetriever:
     self.bm25 = BM25Okapi([tokenize(item["content"]) for item in self.documents])
     self.matrix = np.asarray([item["embedding"] for item in self.documents], dtype=np.float32)
     self.matrix /= np.linalg.norm(self.matrix, axis=1, keepdims=True).clip(min=1e-12)
-    self.client = OpenAI()
-    self.embedding_model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
+    self.client = OpenAI(
+      base_url="http://127.0.0.1:8081/v1",
+      api_key="0"
+    )
+    self.embedding_model = "nomic-embed-text-v1.5.f16.gguf"
 
   def _vector_search(self, query: str, top_k: int) -> list[str]:
     response = self.client.embeddings.create(model=self.embedding_model, input=[query])
